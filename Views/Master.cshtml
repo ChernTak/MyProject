@@ -1,0 +1,39 @@
+@using Umbraco.Cms.Web.Common.PublishedModels
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    var home = Model.Root();
+    var pageTitle = Model.Value<string>("metaTitle");
+    if (string.IsNullOrWhiteSpace(pageTitle))
+    {
+        pageTitle = Model.Name;
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@pageTitle | BrewHouse</title>
+    <meta name="description" content="@(Model.Value<string>("metaDescription"))" />
+    <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="@home.Url()">BrewHouse</a>
+        <nav>
+            @foreach (var item in home.Children().Where(x => !x.Value<bool>("umbracoNaviHide")))
+            {
+                <a href="@item.Url()" class="@(item.Id == Model.Id || Model.Path.Contains("," + item.Id + ",") ? "active" : null)">@item.Name</a>
+            }
+        </nav>
+    </header>
+
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <p>@(home.Value<string>("footerText"))</p>
+    </footer>
+</body>
+</html>
