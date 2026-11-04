@@ -1,0 +1,16 @@
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<IPublishedContent>
+@{
+    var date = Model.Value<DateTime>("publishedDate");
+    var tags = Model.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
+}
+<article class="card">
+    <h2><a href="@Model.Url()">@Model.Value("pageTitle")</a></h2>
+    <p class="meta">@date.ToString("d MMMM yyyy")</p>
+    <p>@Model.Value("summary")</p>
+    @foreach (var tag in tags)
+    {
+        <span class="tag">@tag</span>
+    }
+</article>

@@ -1,6 +1,31 @@
-﻿@using Umbraco.Cms.Web.Common.PublishedModels;
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.BlogPost>
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+﻿@using Umbraco.Cms.Core.Models
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
-	Layout = null;
+    Layout = "Master.cshtml";
+
+    var image = Model.Value<MediaWithCrops>("heroImage");
+    var date = Model.Value<DateTime>("publishedDate");
+    var tags = Model.Value<IEnumerable<string>>("tags") ?? Enumerable.Empty<string>();
 }
+
+<article class="prose">
+    <h1>@Model.Value("pageTitle")</h1>
+    <p class="meta">@date.ToString("d MMMM yyyy")</p>
+
+    @if (image is not null)
+    {
+        <img src="@(image.Url() + "?width=1200&height=600&rmode=crop&format=webp")" width="1200" height="600" alt="@Model.Value("pageTitle")" />
+    }
+
+    @Model.Value("bodyText")
+
+    <p>
+        @foreach (var tag in tags)
+        {
+            <span class="tag">@tag</span>
+        }
+    </p>
+
+    <p><a href="@Model.Parent()?.Url()">&larr; Back to the blog</a></p>
+</article>

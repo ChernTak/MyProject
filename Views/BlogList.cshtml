@@ -1,6 +1,18 @@
-﻿@using Umbraco.Cms.Web.Common.PublishedModels;
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.BlogList>
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
-	Layout = null;
+    Layout = "Master.cshtml";
+
+    var posts = Model.Children()
+        .Where(x => x.ContentType.Alias == "blogPost")
+        .OrderByDescending(x => x.Value<DateTime>("publishedDate"))
+        .ToList();
+}
+
+<h1>@Model.Value("pageTitle")</h1>
+<p>@Model.Value("intro")</p>
+
+@foreach (var post in posts)
+{
+    @await Html.PartialAsync("PostCard", post)
 }

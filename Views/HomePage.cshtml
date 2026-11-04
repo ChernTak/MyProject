@@ -11,3 +11,16 @@
 <div class="prose">
     @Model.Value("bodyText")
 </div>
+
+@{
+    var latest = Model.Descendants()
+        .Where(x => x.ContentType.Alias == "blogPost")
+        .OrderByDescending(x => x.Value<DateTime>("publishedDate"))
+        .Take(3);
+}
+
+<h2>Latest from the blog</h2>
+@foreach (var post in latest)
+{
+    @await Html.PartialAsync("PostCard", post)
+}
