@@ -1,6 +1,34 @@
-﻿@using Umbraco.Cms.Web.Common.PublishedModels;
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.ContactPage>
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
-	Layout = null;
+    Layout = "Master.cshtml";
+}
+
+<h1>@Model.Value("pageTitle")</h1>
+<p>@Model.Value("introText")</p>
+
+@if (TempData["ContactSent"] is true)
+{
+    <div class="alert">Thank you! We received your message.</div>
+}
+else
+{
+    @using (Html.BeginUmbracoForm<ContactSurfaceController>(nameof(ContactSurfaceController.Submit)))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "error" })
+
+        <label for="Name">Name</label>
+        <input id="Name" name="Name" />
+        @Html.ValidationMessage("Name", new { @class = "error" })
+
+        <label for="Email">Email</label>
+        <input id="Email" name="Email" type="email" />
+        @Html.ValidationMessage("Email", new { @class = "error" })
+
+        <label for="Message">Message</label>
+        <textarea id="Message" name="Message" rows="6"></textarea>
+        @Html.ValidationMessage("Message", new { @class = "error" })
+
+        <button type="submit">Send</button>
+    }
 }
